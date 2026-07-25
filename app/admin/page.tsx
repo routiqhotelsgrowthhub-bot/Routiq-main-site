@@ -9,6 +9,8 @@ export default async function AdminPage() {
     .select("*")
     .order("created_at", { ascending: false });
 
+  console.log("ADMIN PAGE LEADS:", leads);
+
   if (error) {
     return (
       <main className="min-h-screen bg-[#08111F] flex items-center justify-center text-white">
@@ -34,11 +36,15 @@ export default async function AdminPage() {
 
   return (
     <main className="min-h-screen bg-[#08111F] text-white flex">
+
+      {/* Sidebar */}
       <AdminSidebar />
 
       <div className="flex-1 p-10">
+
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
+
           <div>
             <h1 className="text-4xl font-bold text-yellow-400">
               ROUTIQ CRM
@@ -54,10 +60,13 @@ export default async function AdminPage() {
           </div>
 
           <LogoutButton />
+
         </div>
+
 
         {/* Welcome Card */}
         <div className="bg-gradient-to-r from-yellow-500 to-yellow-300 text-black rounded-2xl p-8 mb-8 shadow-lg">
+
           <h2 className="text-3xl font-bold">
             Welcome Back 👋
           </h2>
@@ -65,24 +74,44 @@ export default async function AdminPage() {
           <p className="mt-3 text-lg">
             Manage your hotel leads, monitor enquiries, and grow your business with ROUTIQ CRM.
           </p>
+
         </div>
 
-        {/* Search + Dashboard Cards + Leads Table */}
-        <AdminDashboard leads={leads ?? []} />
+
+        {/* Dashboard + Leads */}
+        <AdminDashboard 
+          leads={leads ?? []}
+        />
+
 
         {/* Recent Activity */}
         <div className="bg-[#13233A] rounded-2xl p-6 mt-8 shadow-lg">
+
           <h2 className="text-2xl font-bold mb-4">
             Recent Activity
           </h2>
 
+
           <ul className="space-y-3 text-gray-300">
-            <li>✅ Lead management system active</li>
-            <li>📊 Dashboard synchronized with database</li>
-            <li>🔒 Secure admin authentication enabled</li>
+
+            <li>
+              ✅ Lead management system active
+            </li>
+
+            <li>
+              📊 Dashboard synchronized with database
+            </li>
+
+            <li>
+              🔒 Secure admin authentication enabled
+            </li>
+
           </ul>
+
         </div>
+
       </div>
+
     </main>
   );
 }
