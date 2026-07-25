@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
-console.log("Service key exists:", !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -39,6 +42,32 @@ export async function POST(req: Request) {
     }
 
     console.log("Inserted:", data);
+
+
+    // Send email notification
+    await resend.emails.send({
+      from: "ROUTIQ <onboarding@resend.dev>",
+      to: "your-email@example.com",
+      subject: "🚀 New Hotel Growth Audit Submission",
+      html: `
+        <h2>New Hotel Lead Received</h2>
+
+        <p><strong>Hotel Name:</strong> ${body.hotel_name}</p>
+        <p><strong>Owner Name:</strong> ${body.owner_name}</p>
+        <p><strong>Email:</strong> ${body.email}</p>
+        <p><strong>Phone:</strong> ${body.phone}</p>
+        <p><strong>City:</strong> ${body.city}</p>
+        <p><strong>Rooms:</strong> ${body.rooms}</p>
+        <p><strong>Property Type:</strong> ${body.property_type}</p>
+        <p><strong>Website:</strong> ${body.website}</p>
+
+        <h3>Challenge</h3>
+        <p>${body.challenge}</p>
+
+        <p><strong>Preferred Contact:</strong> ${body.preferred_contact}</p>
+      `,
+    });
+
 
     return NextResponse.json({
       success: true,
