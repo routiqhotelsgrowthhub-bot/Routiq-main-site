@@ -33,7 +33,7 @@ export default function DeleteButton({
 
       if (result.success) {
         alert("Lead deleted successfully!");
-        router.refresh();
+        window.location.reload();
       } else {
         alert("Delete failed: " + result.error);
       }
