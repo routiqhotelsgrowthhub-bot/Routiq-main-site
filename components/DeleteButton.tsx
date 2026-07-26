@@ -16,27 +16,37 @@ export default function DeleteButton({
 
     if (!confirmed) return;
 
-    const res = await fetch("/api/delete-lead", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    });
+    try {
+      const res = await fetch("/api/delete-lead", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
 
-    const result = await res.json();
+      console.log("Response Status:", res.status);
 
-    if (result.success) {
-      router.refresh();
-    } else {
-      alert(result.error);
+      const result = await res.json();
+
+      console.log("Delete API Response:", result);
+
+      if (result.success) {
+        alert("Lead deleted successfully!");
+        router.refresh();
+      } else {
+        alert("Delete failed: " + result.error);
+      }
+    } catch (err) {
+      console.error("Delete Error:", err);
+      alert("Something went wrong while deleting the lead.");
     }
   }
 
   return (
     <button
       onClick={deleteLead}
-      className="bg-red-600 hover:bg-red-500 text-white px-3 py-2 rounded-lg"
+      className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg transition"
     >
       Delete
     </button>
