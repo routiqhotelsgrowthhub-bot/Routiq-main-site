@@ -8,8 +8,9 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    console.log("Received:", body);
+    console.log("Received Lead:", body);
 
+    // Save lead to Supabase
     const { data, error } = await supabaseServer
       .from("leads")
       .insert([
@@ -41,36 +42,106 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("Inserted:", data);
+    console.log("Lead inserted successfully:", data);
 
+    // Send Email Notification
+    const { data: emailData, error: emailError } =
+      await resend.emails.send({
+        from: "ROUTIQ <onboarding@resend.dev>",
+        to: ["routiqhotelsgrowthhub@gmail.com"],
+        subject: `🚀 New Hotel Growth Audit - ${body.hotel_name}`,
+        html: `
+          <div style="font-family:Arial,sans-serif;padding:20px">
 
-    // Send email notification
-    await resend.emails.send({
-      from: "ROUTIQ <onboarding@resend.dev>",
-      to: "your-email@example.com",
-      subject: "🚀 New Hotel Growth Audit Submission",
-      html: `
-        <h2>New Hotel Lead Received</h2>
+            <h2 style="color:#d4af37;">
+              New Hotel Growth Audit Submission
+            </h2>
 
-        <p><strong>Hotel Name:</strong> ${body.hotel_name}</p>
-        <p><strong>Owner Name:</strong> ${body.owner_name}</p>
-        <p><strong>Email:</strong> ${body.email}</p>
-        <p><strong>Phone:</strong> ${body.phone}</p>
-        <p><strong>City:</strong> ${body.city}</p>
-        <p><strong>Rooms:</strong> ${body.rooms}</p>
-        <p><strong>Property Type:</strong> ${body.property_type}</p>
-        <p><strong>Website:</strong> ${body.website}</p>
+            <table
+              cellpadding="10"
+              cellspacing="0"
+              border="1"
+              style="border-collapse:collapse;width:100%;max-width:700px;"
+            >
 
-        <h3>Challenge</h3>
-        <p>${body.challenge}</p>
+              <tr>
+                <td><strong>Hotel Name</strong></td>
+                <td>${body.hotel_name}</td>
+              </tr>
 
-        <p><strong>Preferred Contact:</strong> ${body.preferred_contact}</p>
-      `,
-    });
+              <tr>
+                <td><strong>Owner Name</strong></td>
+                <td>${body.owner_name}</td>
+              </tr>
 
+              <tr>
+                <td><strong>Email</strong></td>
+                <td>${body.email}</td>
+              </tr>
+
+              <tr>
+                <td><strong>Phone</strong></td>
+                <td>${body.phone}</td>
+              </tr>
+
+              <tr>
+                <td><strong>City</strong></td>
+                <td>${body.city}</td>
+              </tr>
+
+              <tr>
+                <td><strong>Rooms</strong></td>
+                <td>${body.rooms}</td>
+              </tr>
+
+              <tr>
+                <td><strong>Property Type</strong></td>
+                <td>${body.property_type}</td>
+              </tr>
+
+              <tr>
+                <td><strong>Website</strong></td>
+                <td>${body.website || "N/A"}</td>
+              </tr>
+
+              <tr>
+                <td><strong>Preferred Contact</strong></td>
+                <td>${body.preferred_contact}</td>
+              </tr>
+
+            </table>
+
+            <h3 style="margin-top:25px;">Business Challenge</h3>
+
+            <p>${body.challenge}</p>
+
+            <hr />
+
+            <p>
+              <strong>Submitted via ROUTIQ Hotel Growth Hub</strong>
+            </p>
+
+          </div>
+        `,
+      });
+
+    if (emailError) {
+      console.error("Resend Error:", emailError);
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: emailError.message,
+        },
+        { status: 500 }
+      );
+    }
+
+    console.log("Email sent successfully:", emailData);
 
     return NextResponse.json({
       success: true,
+      message: "Lead submitted successfully.",
       data,
     });
 
@@ -80,7 +151,10 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: String(err),
+        error:
+          err instanceof Error
+            ? err.message
+            : "Unknown server error",
       },
       { status: 500 }
     );
