@@ -22,12 +22,13 @@ export default function AdminDashboard({
 }: {
   leads: Lead[];
 }) {
+  const [leadList, setLeadList] = useState(leads);
   const [search, setSearch] = useState("");
 
   const filteredLeads = useMemo(() => {
     const term = search.toLowerCase();
 
-    return leads.filter((lead) =>
+    return leadList.filter((lead) =>
       [
         lead.hotel_name,
         lead.owner_name,
@@ -38,18 +39,33 @@ export default function AdminDashboard({
         .toLowerCase()
         .includes(term)
     );
-  }, [search, leads]);
+  }, [search, leadList]);
+
+  function removeLead(id: number) {
+    setLeadList((prev) => prev.filter((lead) => lead.id !== id));
+  }
+
+  function updateLeadStatus(id: number, status: string) {
+    setLeadList((prev) =>
+      prev.map((lead) =>
+        lead.id === id
+          ? { ...lead, status }
+          : lead
+      )
+    );
+  }
 
   return (
     <>
       <DashboardCards leads={filteredLeads} />
-      <div className="flex justify-between items-center mb-6">
-  <h2 className="text-2xl font-bold">
-    Hotel Leads
-  </h2>
 
-  <ExportCSVButton leads={filteredLeads} />
-</div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">
+          Hotel Leads
+        </h2>
+
+        <ExportCSVButton leads={filteredLeads} />
+      </div>
 
       <div className="my-8">
         <SearchBar
@@ -58,7 +74,11 @@ export default function AdminDashboard({
         />
       </div>
 
-      <LeadsTable leads={filteredLeads} />
+      <LeadsTable
+        leads={filteredLeads}
+        onDelete={removeLead}
+        onStatusChange={updateLeadStatus}
+      />
     </>
   );
 }
