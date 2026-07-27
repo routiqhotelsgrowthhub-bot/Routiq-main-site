@@ -1,22 +1,52 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+export const metadata: Metadata = {
+  metadataBase: new URL("https://www.routiq.co.in"),
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  title: {
+    default: "ROUTIQ | Hotel Growth Hub",
+    template: "%s | ROUTIQ",
+  },
 
-export const metadata = {
-  title: "ROUTIQ | Hotel Growth Hub",
-  description: "AI-powered hotel growth platform",
+  description:
+    "ROUTIQ helps hotels increase direct bookings through hotel websites, CRM, digital marketing, automation, and revenue growth solutions.",
+
+  keywords: [
+    "Hotel Growth",
+    "Hotel Marketing",
+    "Hotel CRM",
+    "Hotel Website",
+    "Hotel Digital Marketing",
+    "Hotel Revenue Growth",
+    "ROUTIQ",
+  ],
+
+  verification: {
+    google: "4z2DABOC4JKa7vGRYssLkI0V5Le1A5il9P2W3mWxf8k",
+  },
+
+  openGraph: {
+    title: "ROUTIQ | Hotel Growth Hub",
+    description:
+      "Helping hotels increase direct bookings with websites, CRM, digital marketing, automation and revenue growth.",
+    url: "https://www.routiq.co.in",
+    siteName: "ROUTIQ",
+    type: "website",
+    locale: "en_US",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "ROUTIQ | Hotel Growth Hub",
+    description:
+      "Helping hotels increase direct bookings with websites, CRM, digital marketing and automation.",
+  },
+
   icons: {
-    icon: "/logo.png",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
 };
 
@@ -26,11 +56,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <body>{children}</body>
     </html>
   );
 }
