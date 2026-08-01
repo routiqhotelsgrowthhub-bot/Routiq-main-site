@@ -13,14 +13,16 @@ export const metadata: Metadata = {
     "ROUTIQ helps hotels increase direct bookings through hotel websites, CRM, digital marketing, automation, and revenue growth solutions.",
 
   keywords: [
+    "ROUTIQ",
     "Hotel Growth",
     "Hotel Marketing",
     "Hotel CRM",
     "Hotel Website",
     "Hotel Digital Marketing",
     "Hotel Revenue Growth",
-    "ROUTIQ",
   ],
+
+  applicationName: "ROUTIQ",
 
   verification: {
     google: "4z2DABOC4JKa7vGRYssLkI0V5Le1A5il9P2W3mWxf8k",
@@ -32,8 +34,8 @@ export const metadata: Metadata = {
       "Helping hotels increase direct bookings with websites, CRM, digital marketing, automation and revenue growth.",
     url: "https://www.routiq.co.in",
     siteName: "ROUTIQ",
-    type: "website",
     locale: "en_US",
+    type: "website",
   },
 
   twitter: {
@@ -55,8 +57,24 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "ROUTIQ",
+    alternateName: "ROUTIQ Hotel Growth Hub",
+    url: "https://www.routiq.co.in",
+  };
+
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd),
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
