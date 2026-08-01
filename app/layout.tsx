@@ -44,12 +44,6 @@ export const metadata: Metadata = {
     description:
       "Helping hotels increase direct bookings with websites, CRM, digital marketing and automation.",
   },
-
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
-  },
 };
 
 export default function RootLayout({
