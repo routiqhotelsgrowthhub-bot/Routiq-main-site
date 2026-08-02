@@ -124,9 +124,7 @@ export default function Footer() {
           © 2026 ROUTIQ • Hotel Growth Hub
         </p>
 
-        <p className="text-gray-600 mt-2 text-sm">
-          Built with Next.js • React • Tailwind CSS • Supabase
-        </p>
+       
 
       </div>
 
